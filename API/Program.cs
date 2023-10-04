@@ -1,4 +1,5 @@
 using Infrastructura.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -19,6 +20,15 @@ builder.Services.AddDbContext<ApiContext>(option =>
 
 
 var app = builder.Build();
+
+app.MapGet("/", () => "Hello World!");
+
+app.MapGet("/dbconexion", async ([FromServices] ApiContext DbContext) =>
+{
+    DbContext.Database.EnsureCreated();
+    return Results.Ok("Base de datos en memoria: " + DbContext.Database.IsMySql());
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
